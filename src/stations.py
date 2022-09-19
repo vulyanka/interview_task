@@ -1,4 +1,5 @@
 import json
+import time
 import logging
 from dataclasses import dataclass, field, asdict
 from typing import List
@@ -74,9 +75,11 @@ class Stations:
             return
 
         logging.info('Start getting actual stations from web...')
+        t1 = time.time()
 
         r = make_async_http_get([f'https://{self.STATIONS_URL}'])
         data = r[0]
+        logging.info(f'Getting actual stations: web response in {time.time() - t1} seconds')
 
         self.api_stations = []
         self.stations_by_bikes = {}
@@ -98,7 +101,7 @@ class Stations:
         for val in self.stations_by_bikes.values():
             val.sort(key=lambda x: x.name)
 
-        logging.info('Getting actual stations: Done.')
+        logging.info(f'Getting actual stations: Done in {time.time() - t1} seconds')
 
     def load_station_addresses(self) -> None:
         ''' Function to load station addresses.
@@ -106,6 +109,7 @@ class Stations:
         self.load_actual_stations()
 
         logging.info('Start getting station addresses from web...')
+        t1 = time.time()
         
         address_get_urls = []
         for api_station in self.api_stations:
@@ -114,6 +118,8 @@ class Stations:
                 f'?latitude={api_station.latitude}&longitude={api_station.longitude}')
 
         r = make_async_http_get(address_get_urls)
+        logging.info(f'Getting station addresses: web response in {time.time() - t1} seconds')
+
         for api_station, api_address in zip(self.api_stations, r):
             if api_address and 'data' in api_address and 'name' in api_address['data']:
                 api_station.station.address = api_address['data']['name']
@@ -121,7 +127,7 @@ class Stations:
                 logging.warn(f'There is not valid address for {api_station.name} station'
                              f'with latitude={api_station.latitude} and longitude={api_station.longitude}')
 
-        logging.info('Getting station addresses: Done.')
+        logging.info(f'Getting station addresses: Done in {time.time() - t1} seconds')
 
     def load_full_stations_data(self) -> None:
         ''' Function to load whole stations-related data.
@@ -136,6 +142,7 @@ class Stations:
         self.load_actual_stations()
 
         logging.info(f'Calculating available stations with at least {min_free_bikes} free bike(s)...')
+        t1 = time.time()
 
         keys = list(self.stations_by_bikes.keys())
         keys.sort(reverse=True)
@@ -146,5 +153,5 @@ class Stations:
                 break
             res.extend(self.stations_by_bikes[key])
 
-        logging.info('Calculating available stations: Done.')
+        logging.info(f'Calculating available stations: Done in {time.time() - t1} seconds')
         return res
