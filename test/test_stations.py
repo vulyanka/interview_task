@@ -13,7 +13,7 @@ def get_test_stations():
 def get_test_result_stations():
     with open('test/data/stations_result.json') as f:
         data = f.read()
-    return data
+    return json.loads(data)
 
 
 @patch('src.stations.make_async_http_get', return_value=get_test_stations())
@@ -44,7 +44,7 @@ def test_get_available_stations_by_free_bikes(mock_make_async_http_get):
         ['https://wegfinder.at/api/v1/stations'])
 
     assert len(r) == 3
-    assert str(r) == get_test_result_stations()
+    assert json.loads(str(r)) == get_test_result_stations()
 
 
 @patch('src.stations.make_async_http_get')
