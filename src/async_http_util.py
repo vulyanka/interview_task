@@ -19,7 +19,7 @@ async def async_http_get(session, url, tries_threshold) -> Optional[dict]:
             tries += 1
             # Add delay for task to distribute load in time.
             await asyncio.sleep(0.1 * tries)
-        except aiohttp.client_exceptions.ClientConnectorError:
+        except (aiohttp.client_exceptions.ClientConnectorError, asyncio.exceptions.TimeoutError):
             # In case of some connection problem.
             logging.warning(f'Not able to connect: {url}')
             break

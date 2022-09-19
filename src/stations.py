@@ -78,7 +78,7 @@ class Stations:
         t1 = time.time()
 
         r = make_async_http_get([f'https://{self.STATIONS_URL}'])
-        data = r[0]
+        data = r[0] if r[0] else []
         logging.info(f'Getting actual stations: web response in {time.time() - t1} seconds')
 
         self.api_stations = []
