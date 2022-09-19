@@ -21,9 +21,9 @@ async def async_http_get(session, url, tries_threshold) -> Optional[dict]:
             await asyncio.sleep(0.1 * tries)
         except aiohttp.client_exceptions.ClientConnectorError:
             # In case of some connection problem.
-            logging.warn(f'Not able to connect: {url}')
+            logging.warning(f'Not able to connect: {url}')
             break
-    logging.warn(f'Not able to get valid JSON data for {url}')
+    logging.warning(f'Not able to get valid JSON data for {url}')
     return None
 
 

@@ -92,8 +92,8 @@ class Stations:
                 else:
                     self.stations_by_bikes[api_station.free_bikes].append(api_station.station)
             except Exception as err:
-                logging.warn('Skipping station as the incoming station\'s format cannot fit '
-                             f'the expected one: {str(obj)}. Error: {str(err)}')
+                logging.warning('Skipping station as the incoming station\'s format cannot fit '
+                                f'the expected one: {str(obj)}. Error: {str(err)}')
         self.__loaded = True
 
         # Sort stations by name.
@@ -124,8 +124,8 @@ class Stations:
             if api_address and 'data' in api_address and 'name' in api_address['data']:
                 api_station.station.address = api_address['data']['name']
             else:
-                logging.warn(f'There is not valid address for {api_station.name} station'
-                             f'with latitude={api_station.latitude} and longitude={api_station.longitude}')
+                logging.warning(f'There is not valid address for {api_station.name} station'
+                                f'with latitude={api_station.latitude} and longitude={api_station.longitude}')
 
         logging.info(f'Getting station addresses: Done in {time.time() - t1} seconds')
 

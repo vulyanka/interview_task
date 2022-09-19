@@ -1,0 +1,86 @@
+[
+    {
+        "__id": 108,
+        "__name": "Friedrich Schmidtplatz",
+        "__status": "aktiv",
+        "__description": "Ecke Lichtenfelsgasse U2 Station Rathaus",
+        "__boxes": 24,
+        "__free_boxes": 24,
+        "__free_bikes": 0,
+        "__longitude": 16.356581,
+        "__latitude": 48.211433,
+        "__internal_id": 1026
+    },
+    {
+        "id": 112,
+        "name": "Kärntner Ring",
+        "status": "aktiv",
+        "description": "Ecke Akademiestraße in der Mitte der beiden Einkaufszentren der Ringstraßengalerien",
+        "boxes": 16,
+        "free_boxes": 11,
+        "free_bikes": 5,
+        "longitude": 16.371317,
+        "latitude": 48.202157,
+        "internal_id": 1028
+    },
+    {
+        "id": 109,
+        "name": "Johannesgasse",
+        "status": "aktiv",
+        "description": "Parkring / Stadtpark beim Haupteingang des Kursalons",
+        "boxes": 20,
+        "free_boxes": 13,
+        "free_bikes": 5,
+        "longitude": 16.376719,
+        "latitude": 48.203366,
+        "internal_id": 1029
+    },
+    {
+        "id": 110,
+        "name": "Rathausplatz",
+        "status": "aktiv",
+        "description": "Universitätsring gegenüber des Burgtheaters",
+        "boxes": 20,
+        "free_boxes": 20,
+        "free_bikes": 0,
+        "longitude": 16.36025,
+        "latitude": 48.209921,
+        "internal_id": 1027
+    },
+    {
+        "__id": 103,
+        "__name": "Schottenring U4",
+        "__status": "aktiv",
+        "__description": "Franz-Josefs-Kai / Ringturm / Höhe Werdertorgasse U4 Station Schottenring beim Ausgang Salztorbrücke",
+        "__boxes": 21,
+        "__free_boxes": 16,
+        "__free_bikes": 5,
+        "__longitude": 16.372222,
+        "__latitude": 48.215964,
+        "__internal_id": 1020
+    },
+    {
+        "id": 104,
+        "name": "Schwedenplatz",
+        "status": "aktiv",
+        "description": "Franz-Josefs-Kai / Rotenturmstraße bei der U-Bahnstation Schwedenplatz - Ausgang Rotenturmstraße",
+        "boxes": 30,
+        "free_boxes": 29,
+        "free_bikes": 1,
+        "longitude": 16.376655,
+        "latitude": 48.211699,
+        "internal_id": 1023
+    },
+    {
+        "id": 101,
+        "name": "Singerstraße",
+        "status": "aktiv",
+        "description": "Singerstraße vor Hausnummer 2",
+        "boxes": 22,
+        "free_boxes": 9,
+        "free_bikes": 12,
+        "longitude": 16.372136949390438,
+        "latitude": 48.20782938971974,
+        "internal_id": 1030
+    }
+]
