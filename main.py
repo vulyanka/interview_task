@@ -1,18 +1,22 @@
+import logging
 from src.stations import Stations
 
-# logger = logging.getLogger('simple_example')
-# logger.setLevel(logging.INFO)
-# logging.basicConfig(level=logging.INFO)
-# logging.error('start')
+logging.basicConfig(level=logging.INFO)
 
-def main():
-    ''' TODO
+
+def main() -> None:
+    ''' Main function to receive available Stations in JSON.
     '''
-    s = Stations()
-    s.load_full_stations_data()
-    r = s.get_available_stations_by_free_bikes()
+    logging.info('Start.')
+    stations = Stations()
+    stations.load_full_stations_data()
+    r = stations.get_available_stations_by_free_bikes()
+
+    logging.info('Dumping results to file...')
     with open('result.json', 'w') as f:
         f.write(str(r))
+
+    logging.info('Done.')
 
 
 if __name__ == '__main__':

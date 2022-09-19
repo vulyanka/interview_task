@@ -1,14 +1,14 @@
 import json
-from typing import List
 import logging
 from dataclasses import dataclass, field, asdict
+from typing import List
 
 from src.async_http_util import make_async_http_get
 
 
 @dataclass
 class CommonStation:
-    ''' TODO
+    ''' Common contract for station object.
     '''
     id: int
     name: str
@@ -20,7 +20,7 @@ class CommonStation:
 
 @dataclass
 class Station(CommonStation):
-    ''' TODO
+    ''' Contract for station business object.
     '''
     active: str
     free_ratio: float
@@ -33,7 +33,7 @@ class Station(CommonStation):
 
 @dataclass
 class APIStation(CommonStation):
-    ''' TODO
+    ''' Contract for station API object.
     '''
     status: str
     longitude: float
@@ -41,7 +41,9 @@ class APIStation(CommonStation):
     internal_id: int
     station: Station = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        ''' Post processing for mapping API object fields to station business object.
+        '''
         self.station = Station(
             id=self.id, name=self.name, description=self.description, boxes=self.boxes,
             free_boxes=self.free_boxes, free_bikes=self.free_bikes,
@@ -51,13 +53,13 @@ class APIStation(CommonStation):
 
 
 class Stations:
-    ''' TODO
+    ''' Stations aggregator.
     '''
 
-    # TODO
+    # Url for getting stations from web.
     STATIONS_URL = 'wegfinder.at/api/v1/stations'
 
-    # TODO
+    # Url for getting station addresses from web.
     STATIONS_ADDRESS_URL = 'api.i-mobility.at/routing/api/v1/nearby_address'
 
     def __init__(self) -> None:
@@ -66,15 +68,15 @@ class Stations:
         self.stations_by_bikes = None
 
     def load_actual_stations(self) -> None:
-        ''' TODO
+        ''' Function to load actual stations without additional info.
         '''
         if self.__loaded:
             return
 
-        ### TO LIB + try
+        logging.info('Start getting actual stations from web...')
+
         r = make_async_http_get([f'https://{self.STATIONS_URL}'])
         data = r[0]
-        ###
 
         self.api_stations = []
         self.stations_by_bikes = {}
@@ -91,14 +93,19 @@ class Stations:
                              f'the expected one: {str(obj)}. Error: {str(err)}')
         self.__loaded = True
 
-        # TODO
+        # Sort stations by name.
+        logging.info('Applying sorting by name for stations...')
         for val in self.stations_by_bikes.values():
             val.sort(key=lambda x: x.name)
 
+        logging.info('Getting actual stations: Done.')
+
     def load_station_addresses(self) -> None:
-        ''' TODO
+        ''' Function to load station addresses.
         '''
         self.load_actual_stations()
+
+        logging.info('Start getting station addresses from web...')
         
         address_get_urls = []
         for api_station in self.api_stations:
@@ -110,25 +117,34 @@ class Stations:
         for api_station, api_address in zip(self.api_stations, r):
             if api_address and 'data' in api_address and 'name' in api_address['data']:
                 api_station.station.address = api_address['data']['name']
+            else:
+                logging.warn(f'There is not valid address for {api_station.name} station'
+                             f'with latitude={api_station.latitude} and longitude={api_station.longitude}')
+
+        logging.info('Getting station addresses: Done.')
 
     def load_full_stations_data(self) -> None:
-        ''' TODO
+        ''' Function to load whole stations-related data.
         '''
+        logging.info('Loading whole stations-related data...')
         self.load_actual_stations()
         self.load_station_addresses()
 
-    def get_available_stations_by_free_bikes(self, min_free_bikes=1):
-        ''' TODO
+    def get_available_stations_by_free_bikes(self, min_free_bikes=1) -> List[Station]:
+        ''' Function to get available stations sorted by free bikes.
         '''
         self.load_actual_stations()
 
+        logging.info(f'Calculating available stations with at least {min_free_bikes} free bike(s)...')
+
         keys = list(self.stations_by_bikes.keys())
         keys.sort(reverse=True)
-        
+
         res = []
         for key in keys:
             if key < min_free_bikes:
                 break
             res.extend(self.stations_by_bikes[key])
 
+        logging.info('Calculating available stations: Done.')
         return res
