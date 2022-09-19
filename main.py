@@ -9,8 +9,10 @@ def main():
     ''' TODO
     '''
     s = Stations()
+    s.load_full_stations_data()
     r = s.get_available_stations_by_free_bikes()
-    print(r)
+    with open('result.json', 'w') as f:
+        f.write(str(r))
 
 
 if __name__ == '__main__':

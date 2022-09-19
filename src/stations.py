@@ -57,9 +57,12 @@ class Stations:
     # TODO
     STATIONS_URL = 'wegfinder.at/api/v1/stations'
 
+    # TODO
+    STATIONS_ADDRESS_URL = 'api.i-mobility.at/routing/api/v1/nearby_address'
+
     def __init__(self) -> None:
         self.__loaded = False
-        self.stations = None
+        self.api_stations = None
         self.stations_by_bikes = None
 
     def load_actual_stations(self) -> None:
@@ -73,12 +76,12 @@ class Stations:
         data = r[0]
         ###
 
-        self.stations = []
+        self.api_stations = []
         self.stations_by_bikes = {}
         for obj in data:
             try:
                 api_station = APIStation(**obj)
-                self.stations.append(api_station.station)
+                self.api_stations.append(api_station)
                 if api_station.free_bikes not in self.stations_by_bikes:
                     self.stations_by_bikes[api_station.free_bikes] = [api_station.station]
                 else:
@@ -96,7 +99,17 @@ class Stations:
         ''' TODO
         '''
         self.load_actual_stations()
-        # TODO ...
+        
+        address_get_urls = []
+        for api_station in self.api_stations:
+            address_get_urls.append(
+                f'https://{self.STATIONS_ADDRESS_URL}'
+                f'?latitude={api_station.latitude}&longitude={api_station.longitude}')
+
+        r = make_async_http_get(address_get_urls)
+        for api_station, api_address in zip(self.api_stations, r):
+            if api_address and 'data' in api_address and 'name' in api_address['data']:
+                api_station.station.address = api_address['data']['name']
 
     def load_full_stations_data(self) -> None:
         ''' TODO
